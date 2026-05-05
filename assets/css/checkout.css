@@ -1,0 +1,921 @@
+/* ── Pure Peptides Custom Checkout Design ── */
+
+:root {
+  --cco-primary: #c29b4e; /* Gold/Brown color from image */
+  --cco-primary-dark: #a6813d;
+  --cco-text-main: #1a1a2e;
+  --cco-text-muted: #71717a;
+  --cco-bg-light: #f8fafc;
+  --cco-border: #e2e8f0;
+  --cco-radius: 8px;
+}
+
+body.cco-checkout-body {
+  background-color: #fff !important;
+  color: var(--cco-text-main) !important;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif !important;
+  margin: 0 !important;
+  line-height: 1.5 !important;
+}
+
+.cco-container {
+  max-width: 1100px !important;
+  margin: 0 auto !important;
+  padding: 0 20px !important;
+}
+
+/* ── Header ── */
+.cco-header {
+  background: #fff !important;
+  padding: 20px 0 !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+.cco-header-inner {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+.cco-logo-img {
+  height: 60px !important;
+  width: auto !important;
+  display: block !important;
+}
+.cco-back-to-shop {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 14px !important;
+  color: var(--cco-text-main) !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  padding: 8px 16px !important;
+  border-radius: 6px !important;
+  background: #f8fafc !important;
+  transition: all 0.2s !important;
+}
+.cco-back-to-shop:hover {
+  background: #f1f5f9 !important;
+  color: var(--cco-primary) !important;
+}
+
+.cco-error {
+  background: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+  color: #b91c1c !important;
+  padding: 12px 16px !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  margin: 10px 0 !important;
+}
+
+/* ── Layout ── */
+.cco-main {
+  padding: 40px 0 !important;
+}
+.cco-layout-grid {
+  display: grid !important;
+  grid-template-columns: 1.5fr 1fr !important;
+  gap: 60px !important;
+  padding: 20px !important;
+  align-items: start !important;
+}
+.cco-sidebar-wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 24px !important;
+}
+
+@media (max-width: 991px) {
+  .cco-layout-grid {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+}
+
+/* ── Sections ── */
+.cco-section {
+  margin-bottom: 32px !important;
+}
+.cco-section h3 {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  margin: 0 0 4px !important;
+}
+.cco-section-desc {
+  font-size: 13px !important;
+  color: var(--cco-text-muted) !important;
+  margin-bottom: 16px !important;
+}
+
+/* ── Alert Box ── */
+.cco-alert-box {
+  background: #fff9f0 !important;
+  border: 1px solid #fbd38d !important;
+  padding: 16px !important;
+  border-radius: var(--cco-radius) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 32px !important;
+}
+.cco-alert-text {
+  font-size: 13px !important;
+  color: #7b341e !important;
+  flex: 1 !important;
+}
+.cco-alert-timer {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #1a1a2e !important;
+  margin-left: 20px !important;
+  white-space: nowrap !important;
+}
+
+/* ── Buttons ── */
+.cco-apple-pay-btn {
+  width: 100% !important;
+  background: #000 !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 14px !important;
+  border-radius: 6px !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  margin-bottom: 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+.cco-apple-pay-btn:hover {
+  background: #333 !important;
+}
+.cco-divider {
+  text-align: center !important;
+  position: relative !important;
+  margin: 24px 0 !important;
+}
+.cco-divider::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 50%;
+  left: 0;
+  right: 0 !important;
+  height: 1px !important;
+  background: var(--cco-border) !important;
+  z-index: 1 !important;
+}
+.cco-divider span {
+  background: #fff !important;
+  padding: 0 10px !important;
+  position: relative !important;
+  z-index: 2 !important;
+  color: var(--cco-text-muted) !important;
+  font-size: 12px !important;
+}
+
+/* ── Forms ── */
+.cco-field {
+  margin-bottom: 14px !important;
+}
+.cco-field input,
+.cco-field select,
+.cco-field textarea {
+  width: 100% !important;
+  padding: 14px 16px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px !important;
+  font-size: 16px !important;
+  color: #111827 !important;
+  background-color: #fff !important;
+  box-sizing: border-box !important;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+.cco-field input::placeholder {
+  color: #9ca3af !important;
+}
+.cco-field input:focus,
+.cco-field select:focus {
+  outline: none !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1) !important;
+}
+
+.cco-field select {
+  background-repeat: no-repeat !important;
+  background-position: right 16px center !important;
+  background-size: 16px !important;
+  padding-right: 44px !important;
+}
+
+.cco-field input[type="email"],
+.cco-field input[type="date"],
+.cco-field input[type="search"],
+.cco-field input[type="number"],
+.cco-field input[type="text"],
+.cco-field input[type="tel"],
+.cco-field input[type="url"],
+.cco-field input[type="password"],
+.cco-field textarea,
+.cco-field select {
+  background-color: #ffffff !important;
+  height: 46px !important;
+  padding: 0 10px !important;
+  vertical-align: middle !important;
+  border-radius: 4px !important;
+}
+
+.cco-row {
+  display: flex !important;
+  gap: 14px !important;
+  margin-bottom: 14px !important;
+}
+.cco-row .cco-field {
+  flex: 1 !important;
+  margin-bottom: 0 !important;
+}
+.cco-row--three .cco-field {
+  flex: 1 !important;
+}
+.cco-row--three .cco-field:nth-child(2) {
+  flex: 1.2 !important;
+} /* State is usually longer */
+
+.cco-checkbox-wrap {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  font-size: 14px !important;
+  color: #374151 !important;
+  margin: 18px 0 !important;
+  cursor: pointer !important;
+}
+.cco-checkbox-wrap input[type="checkbox"] {
+  width: 20px !important;
+  height: 20px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  background-color: #fff !important;
+  position: relative !important;
+  flex-shrink: 0 !important;
+}
+.cco-checkbox-wrap input[type="checkbox"]:checked {
+  background-color: var(--cco-primary) !important;
+  border-color: var(--cco-primary) !important;
+}
+.cco-checkbox-wrap input[type="checkbox"]:checked::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 6px;
+  top: 2px !important;
+  width: 6px;
+  height: 10px !important;
+  border: solid #fff !important;
+  border-width: 0 2px 2px 0 !important;
+  transform: rotate(45deg) !important;
+}
+
+/* ── Billing Address Panel (shown when checkbox is ticked) ── */
+#cco-shipping-fields {
+  overflow: hidden !important; /* required for jQuery slideToggle */
+}
+.cco-shipping-fields-inner {
+  border-top: 1px dashed var(--cco-border) !important;
+  margin-top: 4px !important;
+  padding-top: 20px !important;
+  background: #fafbfc !important;
+  border-radius: var(--cco-radius) !important;
+  padding: 20px !important;
+  margin-top: 12px !important;
+}
+.cco-shipping-fields-title {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: var(--cco-text-main) !important;
+  margin: 0 0 16px !important;
+  padding-bottom: 10px !important;
+  border-bottom: 1px solid var(--cco-border) !important;
+}
+
+/* ── Shipping Card ── */
+.cco-shipping-method-card {
+  border: 1px solid var(--cco-primary) !important;
+  background: #fffcf5 !important;
+  padding: 16px !important;
+  border-radius: var(--cco-radius) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+.cco-method-info {
+  display: flex !important;
+  gap: 12px !important;
+  align-items: flex-start !important;
+}
+.cco-method-info input {
+  margin-top: 4px !important;
+}
+.cco-method-text {
+  display: flex !important;
+  gap: 4px !important;
+  flex-direction: column !important;
+}
+.cco-method-text strong {
+  font-size: 14px !important;
+}
+.cco-method-text span {
+  font-size: 12px !important;
+  color: var(--cco-text-muted) !important;
+}
+.cco-method-price {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #16a34a !important;
+}
+
+/* ── Payment Box ── */
+.cco-payment-box {
+  border: 1px solid var(--cco-border) !important;
+  border-radius: var(--cco-radius) !important;
+  overflow: hidden !important;
+}
+.cco-payment-method {
+  display: flex !important;
+  align-items: center !important;
+  padding: 16px !important;
+  background: #fff !important;
+  cursor: pointer !important;
+  border-bottom: 1px solid var(--cco-border) !important;
+  transition: background 0.2s !important;
+}
+.cco-payment-method:last-child {
+  border-bottom: none !important;
+}
+.cco-payment-method--active {
+  background: #f8fafc !important;
+}
+.cco-payment-method input {
+  margin-right: 12px !important;
+}
+.cco-payment-label-wrap {
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+}
+.cco-payment-icon {
+  font-size: 20px !important;
+}
+.cco-payment-text {
+  display: flex !important;
+  gap: 10px !important;
+  flex-direction: column !important;
+}
+.cco-payment-text strong {
+  font-size: 14px !important;
+}
+.cco-payment-text span {
+  font-size: 12px !important;
+  color: var(--cco-text-muted) !important;
+}
+.cco-payment-logos {
+  display: flex !important;
+  gap: 10px !important;
+  margin-top: 8px !important;
+  flex-wrap: wrap !important;
+}
+.cco-payment-logos img {
+  height: 24px !important;
+  width: auto !important;
+  object-fit: contain !important;
+}
+
+.cco-footer-payment-logos {
+  display: flex !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+.cco-footer-payment-logos img {
+  height: 18px !important;
+  width: auto !important;
+  object-fit: contain !important;
+}
+
+.cco-payment-details {
+  background: #f8fafc !important;
+  border-bottom: 1px solid var(--cco-border) !important;
+}
+
+/* ── Sidebar & Summary ── */
+.cco-summary-card {
+  background: #fcfcfc !important;
+  border: 1px solid var(--cco-border) !important;
+  padding: 24px !important;
+  border-radius: var(--cco-radius) !important;
+  margin-bottom: 24px !important;
+}
+.cco-summary-card h2 {
+  font-size: 20px !important;
+  margin: 0 0 4px !important;
+}
+.cco-subtitle {
+  font-size: 13px !important;
+  color: var(--cco-text-muted) !important;
+  margin-bottom: 24px !important;
+}
+
+.cco-cart-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  margin-bottom: 16px !important;
+}
+.cco-cart-item__img-wrapper {
+  position: relative !important;
+  flex-shrink: 0 !important;
+}
+.cco-cart-item__img {
+  width: 64px;
+  height: 64px !important;
+  object-fit: contain !important;
+  border: 1px solid var(--cco-border) !important;
+  border-radius: 8px !important;
+  background: #fff !important;
+  padding: 4px !important;
+}
+.cco-cart-item__qty-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px !important;
+  width: 20px;
+  height: 20px !important;
+  background: #71717a;
+  color: #fff !important;
+  font-size: 11px;
+  font-weight: 700 !important;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center !important;
+}
+.cco-cart-item__info {
+  flex: 1 !important;
+}
+.cco-cart-item__name {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  display: block !important;
+}
+.cco-cart-item__variant {
+  font-size: 12px !important;
+  color: var(--cco-text-muted) !important;
+}
+.cco-cart-item__total {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+.cco-coupon-row {
+  display: flex !important;
+  gap: 10px !important;
+  margin: 24px 0 !important;
+  border-top: 1px solid var(--cco-border) !important;
+  border-bottom: 1px solid var(--cco-border) !important;
+  padding: 24px 0 !important;
+}
+.cco-coupon-row input {
+  flex: 1 !important;
+  padding: 12px !important;
+  border: 1px solid var(--cco-border) !important;
+  border-radius: 6px !important;
+}
+.cco-coupon-row button {
+  padding: 0 20px !important;
+  background: #f1f5f9 !important;
+  border: 1px solid var(--cco-border) !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  color: #111827 !important;
+  transition: background 0.2s, color 0.2s !important;
+}
+.cco-coupon-row button:hover {
+  background: #e2e8f0 !important;
+  color: #000 !important;
+}
+
+.cco-coupon-row input[type="email"],
+.cco-coupon-row input[type="date"],
+.cco-coupon-row input[type="search"],
+.cco-coupon-row input[type="number"],
+.cco-coupon-row input[type="text"],
+.cco-coupon-row input[type="tel"],
+.cco-coupon-row input[type="url"],
+.cco-coupon-row input[type="password"],
+.cco-coupon-row textarea,
+.cco-coupon-row select {
+  background-color: #ffffff !important;
+  height: 44px !important;
+  vertical-align: middle !important;
+  border-radius: 4px !important;
+}
+
+.cco-totals-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  font-size: 14px !important;
+  margin-bottom: 12px !important;
+}
+.cco-totals-row--total {
+  border-top: 1px solid var(--cco-border) !important;
+  padding-top: 20px !important;
+  margin-top: 16px !important;
+  font-weight: 700 !important;
+  font-size: 18px !important;
+}
+.cco-currency-code {
+  font-size: 11px !important;
+  color: var(--cco-text-muted) !important;
+  margin-right: 4px !important;
+}
+
+/* ── Trust Section ── */
+.cco-trust-section {
+  padding: 24px !important;
+  background: #fff !important;
+  border: 1px solid var(--cco-border) !important;
+  border-radius: var(--cco-radius) !important;
+}
+.cco-trust-section h3 {
+  font-size: 18px !important;
+  margin: 0 0 20px !important;
+}
+.cco-trust-item {
+  display: flex !important;
+  gap: 16px !important;
+  margin-bottom: 20px !important;
+}
+.cco-trust-icon {
+  font-size: 24px !important;
+  flex-shrink: 0 !important;
+}
+.cco-trust-content strong {
+  font-size: 14px !important;
+  display: block !important;
+}
+.cco-trust-content p {
+  font-size: 12px !important;
+  color: var(--cco-text-muted) !important;
+  margin: 4px 0 0 !important;
+}
+
+/* ── Final Submit ── */
+.cco-submit-wrap {
+  margin-top: 32px !important;
+  text-align: center !important;
+}
+.cco-btn-complete {
+  width: 100% !important;
+  padding: 16px !important;
+  background: var(--cco-primary) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: var(--cco-radius) !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 12px rgba(194, 155, 78, 0.3) !important;
+  transition:
+    transform 0.2s,
+    background 0.2s !important;
+  display: block !important;
+  margin-top: 20px !important;
+}
+.cco-btn-complete:hover {
+  background: var(--cco-primary-dark) !important;
+  transform: translateY(-1px) !important;
+}
+.cco-secure-footer {
+  font-size: 12px !important;
+  color: var(--cco-text-muted) !important;
+  margin-top: 12px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+.cco-secure-logo {
+  height: 20px !important;
+  width: auto !important;
+  vertical-align: middle !important;
+}
+
+.cco-footer-links {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 15px !important;
+  flex-wrap: wrap !important;
+  margin-top: 40px !important;
+  padding-top: 20px !important;
+  border-top: 1px solid var(--cco-border) !important;
+}
+.cco-footer-links a {
+  font-size: 11px !important;
+  color: var(--cco-text-muted) !important;
+  text-decoration: underline !important;
+}
+
+/* ── Notices ── */
+#cco-notices {
+  margin-bottom: 20px !important;
+}
+.cco-notice {
+  padding: 12px 16px !important;
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  margin-bottom: 10px !important;
+}
+.cco-notice--error {
+  background: #fff5f5 !important;
+  color: #c53030 !important;
+  border: 1px solid #feb2b2 !important;
+}
+.cco-notice--success {
+  background: #f0fff4 !important;
+  color: #276749 !important;
+  border: 1px solid #9ae6b4 !important;
+}
+
+/* Loading overlay */
+.cco-summary-section.cco-is-loading {
+  position: relative !important;
+  pointer-events: none !important;
+}
+.cco-summary-section.cco-is-loading::after {
+  content: "" !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0 !important;
+  background: rgba(255, 255, 255, 0.6) !important;
+  z-index: 10 !important;
+}
+
+/* ── Hide Distractions (Floating Carts) ── */
+.fk-cart-icon,
+#fk-cart-icon,
+.fk-side-cart,
+.fkcart-toggler,
+#fkcart-floating-toggler,
+.funnelkit-cart-container,
+#funnelkit-cart-container {
+  display: none !important;
+}
+
+/* ── Coupon Tag (applied coupon badge in totals) ── */
+.cco-coupon-tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: #f0fff4 !important;
+  border: 1px solid #9ae6b4 !important;
+  color: #276749 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  margin-left: 8px !important;
+  vertical-align: middle !important;
+}
+
+.cco-remove-coupon {
+  background: none !important;
+  border: none !important;
+  color: #276749 !important;
+  font-size: 13px !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  opacity: 0.7 !important;
+  transition: opacity 0.2s !important;
+}
+.cco-remove-coupon:hover {
+  opacity: 1 !important;
+  color: #c53030 !important;
+}
+
+/* ── Discount Row ── */
+.cco-discount-row .cco-discount-amount {
+  color: #16a34a !important;
+  font-weight: 600 !important;
+}
+
+.cco-weight-bold {
+  font-weight: 600 !important;
+}
+
+/* ── Individual Tax Rows ── */
+.cco-tax-row {
+  color: var(--cco-text-muted) !important;
+  font-size: 13px !important;
+}
+.cco-tax-row .cco-tax-label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+.cco-tax-row .cco-tax-label::before {
+  content: "" !important;
+  display: inline-block !important;
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: var(--cco-primary) !important;
+  opacity: 0.6 !important;
+  flex-shrink: 0 !important;
+}
+
+/* ── Compound taxes (applied on top of other taxes) get a slight indent ── */
+.cco-tax-compound {
+  padding-left: 12px !important;
+}
+.cco-tax-compound .cco-tax-label::before {
+  background: var(--cco-text-muted) !important;
+  width: 4px !important;
+  height: 4px !important;
+}
+
+/* ── Mobile Summary Toggle Header ── */
+.cco-mobile-summary-header {
+  display: none !important;
+  background: #f9fafb !important;
+  border-top: 1px solid #e5e7eb !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  padding: 15px 20px !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  cursor: pointer !important;
+  margin-bottom: 20px !important;
+}
+.cco-mobile-summary-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  color: #3b82f6 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+.cco-mobile-summary-total {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #111827 !important;
+}
+.cco-mobile-summary-arrow {
+  font-size: 10px !important;
+  transition: transform 0.3s !important;
+}
+.cco-mobile-summary-header.cco-is-active .cco-mobile-summary-arrow {
+  transform: rotate(180deg) !important;
+}
+
+@media (max-width: 991px) {
+  .cco-mobile-summary-header {
+    display: flex !important;
+  }
+  .cco-layout-grid {
+    grid-template-columns: 1fr !important;
+    gap: 30px !important;
+  }
+  .cco-sidebar-wrapper {
+    display: contents !important;
+  }
+  .cco-summary-card {
+    order: 1 !important;
+    display: block; /* Visible by default on mobile */
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+    margin: 0 -20px 20px -20px !important;
+    padding: 20px !important;
+    background: #fefefe !important;
+  }
+  .cco-form-column {
+    order: 2 !important;
+  }
+  .cco-trust-section {
+    order: 3 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .cco-container {
+    padding: 0 15px !important;
+  }
+
+  .cco-header-inner {
+    flex-direction: row !important;
+    gap: 15px !important;
+    text-align: center !important;
+  }
+
+  .cco-logo-img {
+    height: 45px !important;
+  }
+
+  .cco-main {
+    padding: 20px 0 !important;
+  }
+
+  .cco-alert-box {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 10px !important;
+    padding: 12px !important;
+  }
+  .cco-alert-timer {
+    margin-left: 0 !important;
+    font-size: 14px !important;
+  }
+
+  .cco-row,
+  .cco-row--three {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  .cco-row .cco-field,
+  .cco-row--three .cco-field {
+    margin-bottom: 12px !important;
+  }
+
+  .cco-payment-method {
+    flex-wrap: wrap !important;
+  }
+
+  .cco-coupon-row {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  .cco-coupon-row button {
+    height: 46px !important;
+    width: 100% !important;
+  }
+
+  .cco-summary-card {
+    padding: 20px 15px !important;
+  }
+
+  .cco-bankful-fields-wrap {
+    padding: 15px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .cco-section h3 {
+    font-size: 16px !important;
+  }
+  .cco-btn-complete {
+    font-size: 16px !important;
+    padding: 14px !important;
+  }
+
+  .cco-cart-item {
+    gap: 10px !important;
+  }
+  .cco-cart-item__img {
+    width: 48px;
+    height: 48px !important;
+  }
+  .cco-cart-item__name {
+    font-size: 13px !important;
+  }
+
+  .cco-trust-item {
+    gap: 12px !important;
+  }
+  .cco-trust-icon {
+    font-size: 20px !important;
+  }
+
+  .cco-payment-text strong {
+    font-size: 13px !important;
+  }
+  .cco-payment-text span {
+    font-size: 11px !important;
+  }
+}
+
+.cco-main .cco-container {
+  padding: 20px !important;
+}

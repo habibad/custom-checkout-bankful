@@ -29,6 +29,10 @@
         };
     }
 
+    /**
+     * Wraps fetch with JSON parsing that safely handles non-JSON responses
+     * (e.g. WordPress HTML error pages on a 500).
+     */
     async function apiCall( url, options = {} ) {
         const isStoreApi = url.includes( '/wc/store/v1/' );
         const fetchOptions = {
@@ -41,11 +45,40 @@
             }
         };
 
-        const res = await fetch( url, fetchOptions );
-        const data = await res.json();
+        let res;
+        try {
+            res = await fetch( url, fetchOptions );
+        } catch ( networkErr ) {
+            // Total network failure (offline, DNS, etc.)
+            throw new Error( 'Network error – please check your connection and try again.' );
+        }
+
+        // Attempt to parse as JSON regardless of status code.
+        // If the body is an HTML error page we surface a clean message.
+        let data;
+        const contentType = res.headers.get( 'content-type' ) || '';
+
+        if ( contentType.includes( 'application/json' ) ) {
+            try {
+                data = await res.json();
+            } catch ( parseErr ) {
+                throw new Error( 'Server returned an invalid response. Please try again.' );
+            }
+        } else {
+            // Non-JSON (HTML error page, plain text, etc.)
+            const raw = await res.text();
+            if ( ! res.ok ) {
+                // Strip HTML tags to give a readable message in the console.
+                const plain = raw.replace( /<[^>]+>/g, ' ' ).replace( /\s+/g, ' ' ).trim().substring( 0, 300 );
+                console.error( 'CCO: non-JSON server response (' + res.status + '):', plain );
+                throw new Error( 'A server error occurred (HTTP ' + res.status + '). Check the browser console and WP debug log for details.' );
+            }
+            // 2xx but not JSON — shouldn't happen but handle gracefully.
+            data = {};
+        }
 
         if ( ! res.ok ) {
-            const error = new Error( data.message || 'API Error' );
+            const error = new Error( data.message || 'API Error (HTTP ' + res.status + ')' );
             error.response = data;
             throw error;
         }
@@ -81,17 +114,15 @@
     // Country → State
     // ---------------------------------------------------------------
 
-    const statesCache = {}; // Keyed by country code — avoids duplicate fetches.
+    const statesCache = {};
 
     async function populateStates( countryCode, $stateSelect ) {
         if ( ! countryCode ) return;
 
-        // Show a loading placeholder while fetching.
         $stateSelect.empty().append( '<option value="">Loading…</option>' );
         const $row = $stateSelect.closest( '.cco-field' );
 
         try {
-            // Use cached data if available.
             if ( ! statesCache[ countryCode ] ) {
                 statesCache[ countryCode ] = await apiCall(
                     `${apiBase}/states?country=${encodeURIComponent( countryCode )}`
@@ -101,7 +132,6 @@
             const states = statesCache[ countryCode ];
 
             if ( ! states || states.length === 0 ) {
-                // Country has no states — hide the dropdown entirely.
                 $stateSelect.empty();
                 $row.hide();
                 return;
@@ -121,12 +151,10 @@
         }
     }
 
-    // Delivery country → billing state dropdown.
     $( '#cco-country' ).on( 'change', function () {
         populateStates( $( this ).val(), $( '#cco-state' ) );
     } );
 
-    // Billing-address panel country → billing state dropdown.
     $( '#cco-ship-country' ).on( 'change', function () {
         populateStates( $( this ).val(), $( '#cco-ship-state' ) );
     } );
@@ -178,7 +206,6 @@
             </div>
         `;
 
-        // Show each applied coupon as a discount row.
         if ( data.coupon_data && data.coupon_data.length ) {
             data.coupon_data.forEach( c => {
                 html += `
@@ -199,13 +226,10 @@
         html += `
             <div class="cco-totals-row">
                 <span>Shipping</span>
-                <span>${ data.shipping_total > 0 ? fmt(data.shipping_total) : 'Free' }</span>
+                <span>${ data.shipping_total > 0 ? fmt( data.shipping_total ) : 'Free' }</span>
             </div>
         `;
 
-        // Render each tax rate as its own named row (GST, PST, Federal, etc.).
-        // tax_lines comes from WC_Cart::get_tax_totals() which returns one entry
-        // per distinct tax rate configured in WooCommerce → matches the cart page.
         if ( data.tax_enabled ) {
             if ( data.tax_lines && data.tax_lines.length ) {
                 data.tax_lines.forEach( tax => {
@@ -218,7 +242,6 @@
                     `;
                 } );
             } else {
-                // Fallback: no itemised lines yet (before calculate_totals runs).
                 html += `
                     <div class="cco-totals-row cco-tax-row">
                         <span class="cco-tax-label">Estimated taxes</span>
@@ -228,7 +251,6 @@
             }
         }
 
-        // Use server-reported currency code (strip symbol to just letters).
         const currencyCode = window.CCO.currencyCode || 'AUD';
 
         html += `
@@ -241,23 +263,20 @@
         `;
 
         $( '#cco-cart-totals' ).html( html );
-
-        // Update mobile summary total display.
         $( '#cco-mobile-total-display' ).html( fmt( data.total ) );
 
-        // Console log the total price as requested by the user.
         console.log( 'Cart Summary Loaded. Total Price: ', data.total );
     }
 
+    // ---------------------------------------------------------------
+    // Mobile Summary Toggle
+    // ---------------------------------------------------------------
 
-    /**
-     * Handle Mobile Summary Toggle
-     */
     $( document ).on( 'click', '#cco-mobile-summary-toggle', function () {
         const $header = $( this );
-        const $card = $( '.cco-summary-card' );
-        const $text = $header.find( '.cco-mobile-summary-text' );
-        
+        const $card   = $( '.cco-summary-card' );
+        const $text   = $header.find( '.cco-mobile-summary-text' );
+
         $card.stop().slideToggle( 300, function () {
             if ( $card.is( ':visible' ) ) {
                 $text.text( 'Hide order summary' );
@@ -271,7 +290,6 @@
         } );
     } );
 
-    // Initialize toggle state on load for mobile
     if ( $( window ).width() <= 991 ) {
         $( '#cco-mobile-summary-toggle' ).addClass( 'cco-is-active' );
         $( '#cco-mobile-summary-toggle .cco-mobile-summary-text' ).text( 'Hide order summary' );
@@ -279,12 +297,10 @@
         $( '.cco-summary-card' ).show();
     }
 
-    // Prevent issues when switching between media widths (resizing)
     $( window ).on( 'resize', function () {
         if ( $( window ).width() > 991 ) {
             $( '.cco-summary-card' ).css( 'display', '' );
         } else {
-            // Restore visibility state for mobile based on toggle class
             if ( $( '#cco-mobile-summary-toggle' ).hasClass( 'cco-is-active' ) ) {
                 $( '.cco-summary-card' ).css( 'display', 'block' );
             } else {
@@ -292,8 +308,6 @@
             }
         }
     } );
-
-
 
     // ---------------------------------------------------------------
     // 2. Coupon
@@ -320,7 +334,6 @@
         }
     } );
 
-    // Remove coupon (delegated – button is injected dynamically).
     $( '#cco-cart-totals' ).on( 'click', '.cco-remove-coupon', async function () {
         const code = $( this ).data( 'code' );
         clearNotice();
@@ -361,7 +374,6 @@
 
     function collectShippingAddress() {
         if ( ! isShipToDifferent() ) {
-            // Checkbox not ticked — shipping = billing.
             return collectAddress();
         }
         return {
@@ -378,10 +390,9 @@
         };
     }
 
-    // Toggle the billing-address panel.
     $( '#cco-ship-to-different' ).on( 'change', function () {
         $( '#cco-shipping-fields' ).slideToggle( 300 );
-        syncAddress(); // Re-sync so WC knows the new shipping address.
+        syncAddress();
     } );
 
     const syncAddress = debounce( async function() {
@@ -397,6 +408,8 @@
             loadCart();
         } catch ( e ) {
             console.error( 'Address sync failed:', e );
+            // Non-fatal — cart reload will still work.
+            $( '.cco-summary-card' ).removeClass( 'cco-is-loading' );
         }
     }, 800 );
 
@@ -413,14 +426,14 @@
             minutes = parseInt( timer / 60, 10 );
             seconds = parseInt( timer % 60, 10 );
 
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
 
-            $display.text( minutes + "m " + seconds + "s" );
+            $display.text( minutes + 'm ' + seconds + 's' );
 
             if ( --timer < 0 ) {
                 clearInterval( interval );
-                $display.text( "Expired" );
+                $display.text( 'Expired' );
             }
         }, 1000 );
     }
@@ -429,7 +442,7 @@
         const val = $( this ).val();
         $( '.cco-payment-method' ).removeClass( 'cco-payment-method--active' );
         $( this ).closest( '.cco-payment-method' ).addClass( 'cco-payment-method--active' );
-        
+
         if ( val === 'bankful' ) {
             $( '#cco-card-element' ).slideDown();
         } else {
@@ -444,20 +457,19 @@
     $( '#cco-place-order' ).on( 'click', async function () {
         clearNotice();
         setLoading( true );
-        
-        const billing = collectAddress();
+
+        // ── Client-side validation ──────────────────────────────────
         const requiredFields = {
             'cco-first-name': 'First name',
             'cco-last-name':  'Last name',
             'cco-email':      'Email address',
             'cco-address1':   'Address',
             'cco-city':       'City',
-            'cco-state':      'State / Province',
             'cco-postcode':   'ZIP / Postcode',
-            'cco-phone':      'Phone number'
+            'cco-phone':      'Phone number',
         };
 
-        let missing = [];
+        const missing = [];
         for ( const [ id, label ] of Object.entries( requiredFields ) ) {
             if ( ! $( `#${id}` ).val().trim() ) {
                 missing.push( label );
@@ -471,6 +483,30 @@
         }
 
         const paymentMethod = $( 'input[name="payment_method"]:checked' ).val();
+
+        // Validate card fields if paying with Bankful.
+        if ( paymentMethod === 'bankful' ) {
+            const cardNum    = $( '#bankful-card-num' ).val().replace( /\s/g, '' );
+            const cardExpiry = $( '#bankful-card-expiry' ).val().trim();
+            const cardCvc    = $( '#bankful-card-cvc' ).val().trim();
+
+            if ( ! cardNum ) {
+                showNotice( 'Please enter your card number.' );
+                setLoading( false );
+                return;
+            }
+            if ( ! cardExpiry ) {
+                showNotice( 'Please enter your card expiry date (MM/YY).' );
+                setLoading( false );
+                return;
+            }
+            if ( ! cardCvc ) {
+                showNotice( 'Please enter your card CVC.' );
+                setLoading( false );
+                return;
+            }
+        }
+
         const payload = {
             payment_method: paymentMethod,
             billing:        collectAddress(),
@@ -478,10 +514,9 @@
             payment_data:   {},
         };
 
-        // If paying with Bankful, collect the card data.
         if ( paymentMethod === 'bankful' ) {
             payload.payment_data = {
-                bankful_card_num:    $( '#bankful-card-num' ).val().replace(/\s/g, ''),
+                bankful_card_num:    $( '#bankful-card-num' ).val().replace( /\s/g, '' ),
                 bankful_card_expiry: $( '#bankful-card-expiry' ).val().trim(),
                 bankful_card_cvc:    $( '#bankful-card-cvc' ).val().trim(),
             };
@@ -492,13 +527,19 @@
                 method: 'POST',
                 body:   JSON.stringify( payload ),
             } );
-            window.location.href = data.redirect_url;
+
+            if ( data.redirect_url ) {
+                window.location.href = data.redirect_url;
+            } else {
+                showNotice( 'Order placed but no redirect URL received. Please check your email for confirmation.' );
+                setLoading( false );
+            }
         } catch ( err ) {
             console.error( 'Checkout Failed:', err );
             if ( err.response && err.response.data && err.response.data.errors ) {
                 console.table( err.response.data.errors );
             }
-            showNotice( err.message || 'Order failed. Please check your details.' );
+            showNotice( err.message || 'Order failed. Please check your details and try again.' );
             setLoading( false );
         }
     } );
@@ -511,12 +552,11 @@
         loadCart();
         startTimer( 300 ); // 5 minutes
 
-        // Populate states for the default (pre-selected) country on both dropdowns.
         const defaultCountry = $( '#cco-country' ).val();
         if ( defaultCountry ) {
             populateStates( defaultCountry, $( '#cco-state' ) );
         }
-        // Billing address panel starts hidden; populate when it becomes visible.
+
         $( '#cco-ship-to-different' ).one( 'change', function () {
             if ( $( this ).is( ':checked' ) ) {
                 populateStates( $( '#cco-ship-country' ).val(), $( '#cco-ship-state' ) );
